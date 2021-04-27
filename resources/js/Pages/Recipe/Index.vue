@@ -1,15 +1,26 @@
 <template>
 <app-layout>
     <template #header>
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Dashboard
-        </h2>
+        <div class="flex justify-between">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                Dashboard
+            </h2>
+            <inertia-link :href="route('dashboard.create')" class=" bg-green-500 text-white text-sm font-semibold p-3 rounded-md">
+                Add Recipe
+            </inertia-link>
+        </div>
     </template>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="mb-5">
-                <a href="#" class="bg-gray-900 text-white text-sm font-semibold p-3 rounded-md"> Add Recipe</a>
+            <div class="mb-5 flex flex-row">
+                <jet-input id="search" type="text" placeholder="Search" class="mt-1 block" required autofocus />
+                <jet-button class="ml-3">
+                    Search
+                </jet-button>
+                <inertia-link :href="route('dashboard.create')" class="text-sm pt-7 pl-3 hover:underline">
+                    Advance search
+                </inertia-link>
             </div>
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                 <div v-if="!getRecipes.length">
@@ -21,6 +32,8 @@
                     <DataTable :recipes="getRecipes" />
                 </div>
             </div>
+            <!-- {{ recipes }} -->
+           <Pagination v-if="getRecipes.length" :links="getPaginationLinks" />
         </div>
     </div>
 </app-layout>
@@ -28,13 +41,18 @@
 
 <script>
 import AppLayout from '@/Layouts/AppLayout'
-import Welcome from '@/Jetstream/Welcome'
+import JetInput from '@/Jetstream/Input'
 import DataTable from "@/Components/DataTable";
+import JetButton from '@/Jetstream/Button'
+import Pagination from "@/Components/Pagination";
 
 export default {
     components: {
         AppLayout,
         DataTable,
+        JetInput,
+        JetButton,
+        Pagination
     },
     props: {
         recipes: {
@@ -45,6 +63,9 @@ export default {
     computed: {
         getRecipes() {
             return this.recipes.data || [];
+        },
+        getPaginationLinks() {
+            return this.recipes.meta.links || [];
         }
     }
 }

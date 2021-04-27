@@ -38,18 +38,22 @@ class RecipeController extends Controller
     public function index()
     {
         $response = new RecipeCollection($this->recipeRepository->get());
-
         return Inertia::render('Recipe/Index', ['recipes' => $response]);
     }
 
     public function show($id)
     {
         // $response = $this->recipeRepository->find($id);
-        return dd(Recipe::find(3)->tags);
-        // return Inertia::render('Recipe');
+        // return dd(Recipe::find(3)->tags);
+        return Inertia::render('Recipe/Single');
     }
 
     public function create()
+    {
+        return Inertia::render('Recipe/Create');
+    }
+
+    public function edit($id)
     {
         return Inertia::render('Recipe/Create');
     }

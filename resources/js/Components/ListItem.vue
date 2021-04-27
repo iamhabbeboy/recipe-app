@@ -31,7 +31,6 @@
         </td>
         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ cost }}</td>
         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-            <!-- <a href="#" class="text-indigo-600 hover:text-indigo-900">View</a> -->
             <inertia-link :href="route('dashboard.show', { dashboard })" class="text-indigo-600 hover:text-indigo-900">
                 View
             </inertia-link>

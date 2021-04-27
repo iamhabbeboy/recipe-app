@@ -36,7 +36,7 @@ class Recipe extends Model
         if($userId) {
             $response->getByUserId($userId);
         }
-        return $response->with('tags')->get();
+        return $response->with('tags')->paginate(2);
     }
 
     /**
