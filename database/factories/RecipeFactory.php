@@ -31,6 +31,7 @@ class RecipeFactory extends Factory
             'meal_type' => $this->faker->randomElement(['breakfast', 'lunch', 'dinner']),
             'status' => $status,
             'comment' => $status === 'reject' ? $this->faker->sentence(3) : null,
+            'user_id' => 1,
         ];
     }
 }

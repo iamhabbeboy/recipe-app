@@ -24,6 +24,10 @@ Route::get('/', function () {
     ]);
 });
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->name('dashboard');
+Route::get('/tester', function () {
+    return new App\Http\Resources\RecipeCollection(App\Models\Recipe::with('hasTags')->get());
+});
+
+Route::middleware(['auth:sanctum', 'verified'])
+    ->resource('dashboard', App\Http\Controllers\Recipe\RecipeController::class);
+

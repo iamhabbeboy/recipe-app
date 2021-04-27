@@ -9,6 +9,8 @@ class Recipe extends Model
 {
     use HasFactory;
 
+    protected $table = 'recipes';
+
     /**
      * Important keys
      *
@@ -28,9 +30,13 @@ class Recipe extends Model
      *
      * @return Collection
      */
-    public function pending()
+    public function pending($userId = null)
     {
-        return $this->whereStatus('pending')->get();
+        $response = $this->whereStatus('pending');
+        if($userId) {
+            $response->getByUserId($userId);
+        }
+        return $response->with('tags')->get();
     }
 
     /**
@@ -51,5 +57,20 @@ class Recipe extends Model
     public function reject()
     {
         return $this->whereStatus('reject')->get();
+    }
+
+    public function scopeGetByUserId($query, $userId)
+    {
+        return $query->whereUserId($userId);
+    }
+
+    public function getById($id)
+    {
+        return $this->whereId(3)->get();
+    }
+
+    public function tags()
+    {
+        return $this->hasMany(RecipeTag::class, 'recipe_id');
     }
 }

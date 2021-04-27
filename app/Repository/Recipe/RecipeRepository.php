@@ -31,7 +31,9 @@ class RecipeRepository
      */
     public function get($status = null)
     {
-        $response = $this->recipe->pending();
+        $userId = auth()->user()->id;
+
+        $response = $this->recipe->pending($userId);
         switch($status) {
             case "approve":
                 $response = $this->recipe->approve();
@@ -42,8 +44,12 @@ class RecipeRepository
             default:
                 break;
         }
-
         return $response;
+    }
+
+    public function find($id)
+    {
+        return $this->recipe->getById($id);
     }
 
     /**

@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Recipe;
 
+use App\Models\Recipe;
+use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\RecipeCollection;
 use App\Http\Resources\RecipeResource;
 use App\Repository\Recipe\RecipeRepository;
 
@@ -34,7 +37,21 @@ class RecipeController extends Controller
      */
     public function index()
     {
-        return new RecipeResource($this->recipeRepository->get());
+        $response = new RecipeCollection($this->recipeRepository->get());
+
+        return Inertia::render('Recipe/Index', ['recipes' => $response]);
+    }
+
+    public function show($id)
+    {
+        // $response = $this->recipeRepository->find($id);
+        return dd(Recipe::find(3)->tags);
+        // return Inertia::render('Recipe');
+    }
+
+    public function create()
+    {
+        return Inertia::render('Recipe/Create');
     }
 
     /**
