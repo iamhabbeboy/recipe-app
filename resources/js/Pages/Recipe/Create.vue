@@ -88,8 +88,10 @@ import AppLayout from '@/Layouts/AppLayout'
 import JetInput from '@/Jetstream/Input'
 import JetLabel from '@/Jetstream/Label'
 import JetButton from '@/Jetstream/Button'
+import DataMixin from '@/Mixins/Helper';
 
 export default {
+    mixins: [DataMixin],
     components: {
         AppLayout,
         JetInput,
@@ -99,17 +101,6 @@ export default {
     props: {
         recipe: {
             type: Object
-        }
-    },
-    computed: {
-        getRecipe() {
-            return this.recipe || {};
-        },
-        name() {
-            return this.getRecipe.name
-        },
-        description() {
-            return this.getRecipe.description;
         }
     }
 }

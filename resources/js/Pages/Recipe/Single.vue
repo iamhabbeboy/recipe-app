@@ -122,8 +122,10 @@
 <script>
 import AppLayout from '@/Layouts/AppLayout'
 import JetButton from '@/Jetstream/Button'
+import DataMixin from '@/Mixins/Helper';
 
 export default {
+    mixins: [DataMixin],
     components: {
         AppLayout,
         JetButton
@@ -132,33 +134,6 @@ export default {
         recipe: {
             type: Object,
             required: true
-        }
-    },
-    mounted() {
-        console.log(this.recipe);
-    },
-    computed: {
-        getRecipe() {
-            return this.recipe.data || {};
-        },
-        name() {
-            return this.getRecipe.name;
-        },
-        description() {
-            return this.getRecipe.description;
-        },
-        mealType() {
-            const uppercase = this.getRecipe.meal_type.substring(0, 1).toUpperCase();
-            return `${uppercase}${this.getRecipe.meal_type.substring(1)}`;
-        },
-        cost() {
-            return this.getRecipe ? `$${this.getRecipe.cost}` : null;
-        },
-        status() {
-            return this.getRecipe.status;
-        },
-        instruction() {
-            return this.getRecipe.tags;
         }
     }
 }

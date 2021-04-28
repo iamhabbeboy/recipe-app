@@ -38,7 +38,7 @@ class RecipeRepository
 
         switch($status) {
             case "approve":
-                $response = $this->recipe->approve();
+                $response = $this->recipe->approved();
                 break;
             case "reject":
                 $response = $this->recipe->reject();
@@ -48,7 +48,7 @@ class RecipeRepository
             default:
                 break;
         }
-        return $response->getAttributes()->paginate(config('recipe.max_per_page'));
+        return $response->getAttributes();
     }
 
     public function getAll($id = null)

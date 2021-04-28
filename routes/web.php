@@ -1,7 +1,6 @@
 <?php
 
-use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Guest\PageController;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 
@@ -16,14 +15,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+Route::get('/', PageController::class);
 
 Route::post('/search', function (Request $request) {
     $search = $request->search;

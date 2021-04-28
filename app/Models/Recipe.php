@@ -46,7 +46,7 @@ class Recipe extends Model
      */
     public function approved()
     {
-        return $this->whereStatus('approve')->get();
+        return $this->whereStatus('approve');
     }
 
     /**
@@ -80,7 +80,8 @@ class Recipe extends Model
 
     public function scopeGetAttributes($query)
     {
-        return $query->with(['tags.ingredient', 'tags.procedure', 'tags.nutrition']);
+        return $query->with(['tags.ingredient', 'tags.procedure', 'tags.nutrition'])
+        ->paginate(config('recipe.max_per_page'));
     }
 
     public function tags()
