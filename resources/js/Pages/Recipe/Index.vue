@@ -14,13 +14,10 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="mb-5 flex flex-row">
-                <jet-input id="search" type="text" placeholder="Search" class="mt-1 block" required autofocus />
-                <jet-button class="ml-3">
-                    Search
-                </jet-button>
-                <inertia-link :href="route('dashboard.create')" class="text-sm pt-7 pl-3 hover:underline">
-                    Advance search
-                </inertia-link>
+                    <jet-input id="search" type="text" placeholder="Search recipe name, meal type, ..." v-model="form.search" class="mt-1 block" required autofocus />
+                    <jet-button class="ml-3" @click="searchMeal">
+                        Search
+                    </jet-button>
             </div>
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                 <div v-if="!getRecipes.length">
@@ -33,7 +30,7 @@
                 </div>
             </div>
             <!-- {{ recipes }} -->
-           <Pagination v-if="getRecipes.length" :links="getPaginationLinks" />
+            <Pagination v-if="getRecipes.length" :links="getPaginationLinks" />
         </div>
     </div>
 </app-layout>
@@ -45,6 +42,10 @@ import JetInput from '@/Jetstream/Input'
 import DataTable from "@/Components/DataTable";
 import JetButton from '@/Jetstream/Button'
 import Pagination from "@/Components/Pagination";
+import { Inertia } from '@inertiajs/inertia'
+import {
+    reactive
+} from "vue";
 
 export default {
     components: {
@@ -65,8 +66,26 @@ export default {
             return this.recipes.data || [];
         },
         getPaginationLinks() {
-            return this.recipes.meta.links || [];
+            return this.recipes.meta || [];
         }
-    }
+    },
+    setup() {
+        const form = reactive({
+            search: null,
+        })
+
+        const searchMeal = () => {
+            const input = form.search
+            if(input === null) {
+                return;
+            }
+            Inertia.get('/search', form)
+        }
+
+        return {
+            form,
+            searchMeal
+        }
+    },
 }
 </script>

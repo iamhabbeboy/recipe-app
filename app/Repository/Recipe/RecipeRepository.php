@@ -12,6 +12,8 @@ class RecipeRepository
      */
     protected Recipe $recipe;
 
+
+
     /**
      * Recipe instance
      *
@@ -31,9 +33,9 @@ class RecipeRepository
      */
     public function get($status = null)
     {
-        $userId = auth()->user()->id;
+        $userId = auth()->user()->id ?? null;
+        $response = $this->recipe->getByUser($userId);
 
-        $response = $this->recipe->pending($userId);
         switch($status) {
             case "approve":
                 $response = $this->recipe->approve();
@@ -41,10 +43,17 @@ class RecipeRepository
             case "reject":
                 $response = $this->recipe->reject();
                 break;
+            case "pending":
+                $response = $this->recipe->pending($userId);
             default:
                 break;
         }
-        return $response;
+        return $response->getAttributes()->paginate(config('recipe.max_per_page'));
+    }
+
+    public function getAll($id = null)
+    {
+        return $this->recipe->getByUser($id);
     }
 
     public function find($id)

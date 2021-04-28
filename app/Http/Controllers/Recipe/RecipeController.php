@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Recipe;
 
-use App\Models\Recipe;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -43,9 +42,8 @@ class RecipeController extends Controller
 
     public function show($id)
     {
-        // $response = $this->recipeRepository->find($id);
-        // return dd(Recipe::find(3)->tags);
-        return Inertia::render('Recipe/Single');
+        $response = new RecipeResource($this->recipeRepository->find($id));
+        return Inertia::render('Recipe/Single', ['recipe' => $response]);
     }
 
     public function create()
@@ -55,7 +53,8 @@ class RecipeController extends Controller
 
     public function edit($id)
     {
-        return Inertia::render('Recipe/Create');
+        $response = \App\Models\Recipe::find($id)->with(['tags'])->get()->first();
+        return Inertia::render('Recipe/Create', ['recipe' => $response]);
     }
 
     /**

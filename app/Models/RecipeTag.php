@@ -11,8 +11,20 @@ class RecipeTag extends Model
 
     protected $table = 'recipe_tags';
 
-    public function recipe()
+    public function ingredient()
     {
-        return $this->belongsTo(Recipe::class);
+        return $this->belongsTo(Ingredient::class);
     }
+
+    public function procedure()
+    {
+        return $this->belongsTo(Procedure::class);
+    }
+
+    public function nutrition()
+    {
+        return $this->belongsTo(Nutrition::class);
+    }
+
+
 }

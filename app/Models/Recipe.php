@@ -36,7 +36,7 @@ class Recipe extends Model
         if($userId) {
             $response->getByUserId($userId);
         }
-        return $response->with('tags')->paginate(2);
+        return $response;
     }
 
     /**
@@ -59,14 +59,28 @@ class Recipe extends Model
         return $this->whereStatus('reject')->get();
     }
 
+    public function getById($id)
+    {
+        return $this->whereId($id)->getAttributes()->get()->first();
+    }
+
+    public function getByUser($id)
+    {
+        $query = $this->whereNotNull('name')->whereNotNull('description');
+        if($id) {
+            $query->whereUserId($id);
+        }
+        return $query->with(['tags.ingredient']);
+    }
+
     public function scopeGetByUserId($query, $userId)
     {
         return $query->whereUserId($userId);
     }
 
-    public function getById($id)
+    public function scopeGetAttributes($query)
     {
-        return $this->whereId(3)->get();
+        return $query->with(['tags.ingredient', 'tags.procedure', 'tags.nutrition']);
     }
 
     public function tags()

@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,8 +25,9 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/tester', function () {
-    return new App\Http\Resources\RecipeCollection(App\Models\Recipe::with('hasTags')->get());
+Route::post('/search', function (Request $request) {
+    $search = $request->search;
+
 });
 
 Route::middleware(['auth:sanctum', 'verified'])

@@ -13,7 +13,7 @@
                     <div class="text-sm font-medium text-gray-900">
                         {{ name }}
                     </div>
-                    <div class="text-sm text-gray-500">Breakfast</div>
+                    <div class="text-sm text-gray-500">{{ mealType }} </div>
                 </div>
             </div>
         </td>
@@ -45,6 +45,9 @@ export default {
             type: Object,
         }
     },
+    mounted() {
+        console.log(this.recipe)
+    },
     computed: {
         name() {
             return this.recipe.name;
@@ -63,6 +66,10 @@ export default {
         },
         dashboard() {
             return this.recipe.id;
+        },
+        mealType() {
+             const capitalizeText = this.recipe.meal_type.substring(0, 1).toUpperCase();
+            return `${capitalizeText}${this.recipe.meal_type.substring(1)}`
         }
     }
 }

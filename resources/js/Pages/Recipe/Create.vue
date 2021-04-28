@@ -12,8 +12,9 @@
                 <div class="w-1/2 mx-auto pt-10 pb-10">
                     <h3 class="font-semibold text-lg pb-5">Add Recipe</h3>
                     <div class="mt-4">
+
                         <jet-label for="name" value="Name" />
-                        <jet-input id="name" type="text" class="mt-1 block w-full" required autofocus />
+                        <jet-input id="name" type="text" class="mt-1 block w-full" :value="name" required autofocus />
                     </div>
                     <div class="mt-8">
                         <div class="bg-gray-100 p-8 text-center">
@@ -24,7 +25,7 @@
                     </div>
                     <div class="mt-8">
                         <jet-label for="description" value="Desription" />
-                        <textarea id="description" rows="10" class="border-gray-300 w-full focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm" ref="input"></textarea>
+                        <textarea id="description" rows="10" class="border-gray-300 w-full focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm" ref="input">{{ description }}</textarea>
                     </div>
                     <div class="mt-8">
                         <jet-label for="ingredient" value="Ingredient" class="float-left" />
@@ -95,6 +96,21 @@ export default {
         JetLabel,
         JetButton,
     },
-    props: {}
+    props: {
+        recipe: {
+            type: Object
+        }
+    },
+    computed: {
+        getRecipe() {
+            return this.recipe || {};
+        },
+        name() {
+            return this.getRecipe.name
+        },
+        description() {
+            return this.getRecipe.description;
+        }
+    }
 }
 </script>
