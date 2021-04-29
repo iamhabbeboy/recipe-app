@@ -10,4 +10,10 @@ class Nutrition extends Model
     use HasFactory;
 
     protected $table = 'nutritions';
+
+    protected $fillable = [
+        'content',
+        'value',
+        'percentage'
+    ];
 }

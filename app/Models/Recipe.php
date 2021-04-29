@@ -22,6 +22,7 @@ class Recipe extends Model
         'photo',
         'status',
         'user_id',
+        'comment',
         'meal_type',
         'description',
     ];
@@ -81,7 +82,7 @@ class Recipe extends Model
 
     public function scopeGetAttributes($query)
     {
-        return $query->with(['tags.ingredient', 'tags.procedure', 'tags.nutrition']);
+        return $query->with(['ingredient', 'procedure', 'nutrition']);
     }
 
     public function scopePaginated($query)
@@ -89,8 +90,18 @@ class Recipe extends Model
         return $query->paginate(config('recipe.max_per_page'));
     }
 
-    public function tags()
+    public function nutrition()
     {
-        return $this->hasMany(RecipeTag::class, 'recipe_id');
+        return $this->hasMany(Nutrition::class, 'recipe_id');
+    }
+
+    public function ingredient()
+    {
+        return $this->hasMany(Ingredient::class, 'recipe_id');
+    }
+
+    public function procedure()
+    {
+        return $this->hasMany(Procedure::class, 'recipe_id');
     }
 }

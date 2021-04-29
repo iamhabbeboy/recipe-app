@@ -18,6 +18,8 @@ use Illuminate\Http\Request;
 Route::prefix('recipe')->group(function () {
     Route::post('status', [App\Http\Controllers\Data\RecipeDataController::class, 'status'])->name('recipe.status');
     Route::post('create', [App\Http\Controllers\Data\RecipeDataController::class, 'create'])->name('recipe.create');
+    Route::post('show', [App\Http\Controllers\Data\RecipeDataController::class, 'show'])->name('recipe.show');
+    Route::delete('destory/{id}', [App\Http\Controllers\Data\RecipeDataController::class, 'destory'])->name('recipe.destroy');
 });
 
 Route::middleware(['auth:sanctum', 'verified'])
@@ -26,6 +28,8 @@ Route::middleware(['auth:sanctum', 'verified'])
 Route::get('/', [PageController::class, 'index'])->name('guest');
 Route::get('/{id}', [PageController::class, 'show'])->name('guest.show');
 
-Route::post('/search', function (Request $request) {
-    $search = $request->search;
-});
+Route::get('/email/verify', [PageController::class, 'verifyUser'])->middleware('auth')->name('verification.notice');
+
+Route::get('/email/verify/{id}/{hash}', [PageController::class, 'verifyEmail'])->middleware(['auth', 'signed'])->name('verification.verify');
+
+Route::post('/email/verification-notification', [PageController::class, 'verificationNotification'])->middleware(['auth', 'throttle:6,1'])->name('verification.send');

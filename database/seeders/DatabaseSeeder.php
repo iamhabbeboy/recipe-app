@@ -14,11 +14,11 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
+            UserSeeder::class,
             RecipeSeeder::class,
             IngredientSeeder::class,
             NutritionSeeder::class,
             ProcedureSeeder::class,
-            RecipeTagSeeder::class,
         ]);
     }
 }

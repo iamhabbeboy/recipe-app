@@ -18,11 +18,15 @@ class RecipeResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'cost' => $this->cost,
+            'photo' => $this->photo,
             'status' => $this->status,
+            'comment' => $this->comment,
             'useri_id' => $this->user_id,
             'meal_type' => $this->meal_type,
             'description' => $this->description,
-            'tags' => RecipeTagResource::collection($this->whenLoaded('tags'))
+            'ingredient' => $this->ingredient,
+            'nutrition' => $this->nutrition,
+            'procedure' => $this->procedure,
         ];
     }
 }

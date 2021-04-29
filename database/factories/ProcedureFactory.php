@@ -23,7 +23,8 @@ class ProcedureFactory extends Factory
     {
         return [
             'title' => 'steps' . $this->faker->numberBetween(1, 10),
-            'content' => $this->faker->sentence(4)
+            'content' => $this->faker->sentence(4),
+            'recipe_id' => $this->faker->numberBetween(1, 10)
         ];
     }
 }

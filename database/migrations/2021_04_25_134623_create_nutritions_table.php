@@ -16,6 +16,9 @@ class CreateNutritionsTable extends Migration
         Schema::create('nutritions', function (Blueprint $table) {
             $table->id();
             $table->string('content');
+            $table->string('value')->nullable();
+            $table->string('percentage')->nullable();
+            $table->foreignId('recipe_id')->constrained('recipes');
             $table->timestamps();
         });
     }

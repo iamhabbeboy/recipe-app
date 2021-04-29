@@ -24,6 +24,8 @@ class IngredientFactory extends Factory
         return [
             'content' => $this->faker->randomElement(['eggs', 'plain flour', 'salt', 'sugar', 'milk', 'fresh juice']),
             'quantity' => $this->faker->randomElement(['3', '120g', '200ml', '1 tsp', '2Tbsp']),
+            'category' => $this->faker->randomElement(['main', 'primary']),
+            'recipe_id' => $this->faker->numberBetween(1, 10)
         ];
     }
 }

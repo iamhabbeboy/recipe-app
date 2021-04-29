@@ -12,6 +12,8 @@
                 <form method="POST" enctype="multipart/form-data" @submit.prevent="submitForm">
                     <div class="w-1/2 mx-auto pt-10 pb-10">
                         <h3 class="font-semibold text-lg pb-5">Add Recipe</h3>
+                        <div class="bg-green-400 text-white p-5 rounded-md font-semibold">Recipe successfully Added </div>
+                        {{ message }}
                         <div class="mt-4">
                             <jet-label for="name" value="Name" />
                             <jet-input type="text" class="mt-1 block w-full" required v-model="form.name" />
@@ -37,24 +39,30 @@
                         <jet-button type="button" class="float-right text-sm mt-3 text-gray-700" style="background-color: transparent;text-transform:capitalize" @click="addIngredient">
                             Add New
                         </jet-button>
-                        <!-- <Ingredient v-for="(ingredient, index) in ingredientComponent" :index="index" :key="index" @model="ingredienttesting" /> -->
                         <div class="mt-8" v-for="(ingredient, index) in form.ingredient" :key="index">
                             <jet-label :for="`ingredient${index}`" value="Ingredient" class="float-left" />
-                            <jet-input :id="`ingredient${index}`" type="text" class="mt-1 block w-full" required v-model="form.ingredient[index].title" />
+                            <div class="flex clear-both">
+                                <jet-input :id="`ingredient${index}`" placeholder="Title" type="text" class="mt-1 block w-full" required v-model="form.ingredient[index].content" />
+                                <jet-input :id="`ingredient${index}`" type="text" placeholder="Quantity" class="ml-3 mt-1 block w-full" required v-model="form.ingredient[index].quantity" />
+                            </div>
                             <div class="mt-2">
                                 <div class="flex flex-row">
                                     <label class="items-center mt-3">
-                                        <input type="radio" required class="form-radio h-5 w-5 text-gray-600" :name="`ingredient${index}`" v-model="form.ingredient[index].category" value="main"><span class="ml-2 text-gray-700">Main</span>
+                                        <input type="radio" required class="form-radio h-5 w-5 text-gray-600" :name="`ingredient${index}`" v-model="form.ingredient[index].category" value="main" :checked="form.ingredient[index].category==='main'"><span class="ml-2 text-gray-700">Main</span>
                                     </label>
                                     <label class="items-center mt-3 pl-5">
-                                        <input type="radio" class="form-radio h-5 w-5 text-gray-600" :name="`ingredient${index}`" v-model="form.ingredient[index].category" value="primary"><span class="ml-2 text-gray-700">Primary</span>
+                                        <input type="radio" class="form-radio h-5 w-5 text-gray-600" :name="`ingredient${index}`" v-model="form.ingredient[index].category" value="primary" :checked="form.ingredient[index].category==='primary'"><span class="ml-2 text-gray-700">Primary</span>
                                     </label>
                                 </div>
                             </div>
                         </div>
-                        <div class="mt-8">
-                            <jet-label for="instruction" value="Instruction" />
-                            <textarea id="instruction" required rows="5" class="border-gray-300 w-full focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm" v-model="form.instruction"></textarea>
+                        <jet-button type="button" class="float-right text-sm mt-3 text-gray-700" style="background-color: transparent;text-transform:capitalize" @click="addInstruction">
+                            Add New
+                        </jet-button>
+                        <div class="mt-8 clear-both" v-for="(instruction, index) in form.instruction" :key="index">
+                            <jet-label :for="`instruction${index}`" value="Instruction" />
+                            <jet-input :id="`instruction${index}`" placeholder="Steps" type="text" class="mt-1 block w-full" required v-model="form.instruction[index].title" />
+                            <textarea :id="`instruction${index}`" required rows="5" class="border-gray-300 mt-3 w-full focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm" v-model="form.instruction[index].content"></textarea>
                         </div>
                         <div class="mt-8">
                             <jet-label for="meal-type" value="Meal Type" />
@@ -72,10 +80,10 @@
                         <jet-button type="button" class="float-right text-sm mt-3 text-gray-700" style="background-color: transparent;text-transform:capitalize" @click="addNutrition">
                             Add New
                         </jet-button>
-                        <!-- <Nutrition v-for="(nutrition, index) in nutritionComponent" :index="index" :key="index" /> -->
-                        <div class="mt-8" v-for="(nutrition, index) in form.nutrition" :key="index">
-                            <jet-label :for="`nutrition${index}`" value="Nutritional Value" class="float-left" />
-                            <jet-input :id="`nutrition${index}`" type="text" class="mt-1 block w-full" required v-model="form.nutrition[index].title" />
+                        <div class="mt-8 flex clear-both" v-for="(nutrition, index) in form.nutrition" :key="index">
+                            <jet-input :id="`nutrition${index}`" placeholder="Nutrition title" type="text" class="mt-1 block w-full" required v-model="form.nutrition[index].content" />
+                            <jet-input :id="`nutrition${index}`" type="text" placeholder="Nutrition value" class="ml-3  mt-1 block w-full" required v-model="form.nutrition[index].value" />
+                            <jet-input :id="`nutrition${index}`" placeholder="Nutrition amount" type="text" class="ml-3 mt-1 block w-full" required v-model="form.nutrition[index].percentage" />
                         </div>
                         <div class="mt-8 ml-0 pl-0">
                             <jet-button class="py-5 px-20" type="submit">
@@ -96,11 +104,6 @@ import JetInput from '@/Jetstream/Input'
 import JetLabel from '@/Jetstream/Label'
 import JetButton from '@/Jetstream/Button'
 import DataMixin from '@/Mixins/Helper';
-import Ingredient from "@/Components/Ingredient";
-import Nutrition from "@/Components/Nutrition";
-import {
-    watchEffect
-} from "vue"
 import {
     Inertia
 } from '@inertiajs/inertia'
@@ -111,30 +114,36 @@ export default {
         AppLayout,
         JetInput,
         JetLabel,
-        JetButton,
-        // Ingredient,
-        Nutrition
+        JetButton
     },
     props: {
         recipe: {
             type: Object
-        }
+        },
+        message: Object
     },
     data() {
         return {
             photoUrl: null,
             form: this.$inertia.form({
+                id: null,
                 name: '',
                 description: '',
                 cost: '',
                 meal_type: '',
-                instruction: '',
-                ingredient: [{
+                instruction: [{
                     title: '',
+                    content: ''
+                }],
+                ingredient: [{
+                    content: '',
+                    quantity: '',
                     category: ''
                 }],
                 nutrition: [{
-                    title: ''
+                    content: '',
+                    value: '',
+                    percentage: ''
                 }],
             })
         }
@@ -142,6 +151,18 @@ export default {
     mounted() {
         this.form.name = this.name
         this.form.description = this.description
+        if(this.instruction) {
+            this.form.instruction = this.instruction
+        }
+        if(this.nutrition) {
+            this.form.nutrition = this.nutrition
+        }
+        if(this.ingredient) {
+            this.form.ingredient = this.ingredient
+        }
+        this.form.cost = this.cost ? this.cost.substring(1) : 0
+        this.form.meal_type = this.mealType.toLowerCase()
+        this.photoUrl = this.photo ? `/photo/${this.photo}` : null;
     },
     methods: {
         uploadPhoto() {
@@ -153,22 +174,35 @@ export default {
         },
         addIngredient() {
             this.form.ingredient.push({
-                title: '',
+                content: '',
+                quantity: '',
                 category: ''
             })
         },
         addNutrition() {
             this.form.nutrition.push({
-                title: ''
+                content: '',
+                value: '',
+                percentage: ''
+            })
+        },
+        addInstruction() {
+            this.form.instruction.push({
+                title: '',
+                content: '',
             })
         },
         submitForm(e) {
             const file = this.$refs.photo.files[0];
-            if (!file) {
+            this.form.id = this.id ?? null;
+
+            if (this.photoUrl == null) {
                 alert("Please upload a photo");
                 return;
             }
+
             const formData = new FormData();
+            formData.append('id', this.form.id);
             formData.append('photo', file);
             formData.append('name', this.form.name);
             formData.append('cost', this.form.cost);
@@ -178,9 +212,9 @@ export default {
             formData.append('ingredient', JSON.stringify(this.form.ingredient));
             formData.append('nutrition', JSON.stringify(this.form.nutrition));
 
-            Inertia.post(route('recipe.create'), formData
-                //    onSuccess: () => console.log("Hello world")
-            );
+            Inertia.post(route('recipe.create'), formData).then(() => {
+                // this.$alert
+            });
         },
     },
 }

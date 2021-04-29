@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\RecipeResource;
 use App\Http\Resources\RecipeCollection;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 class PageController extends Controller
 {
@@ -26,10 +27,12 @@ class PageController extends Controller
      *
      * @return Inertia
      */
-    public function index()
+    public function index(Request $request)
     {
         $status = auth()->check() ? null : config('recipe.status_approve');
-        $response = new RecipeCollection($this->recipeRepository->get($status));
+        $payload = $request->search ? $this->recipeRepository->filter($request) : $this->recipeRepository->get($status);
+        $response = new RecipeCollection($payload);
+
         $data = [
             'recipes' => $response,
             'isLoggedIn' => auth()->check(),
@@ -49,5 +52,24 @@ class PageController extends Controller
     {
         $response = new RecipeResource($this->recipeRepository->find($id));
         return Inertia::render('Guest/Single', ['recipe' => $response]);
+    }
+
+    public function verifyUser()
+    {
+        return Inertia::render('Auth/VerifyEmail');
+    }
+
+    public function verifyEmail(EmailVerificationRequest $request)
+    {
+        $request->fulfill();
+
+        return redirect('/home');
+    }
+
+    public function verificationNotification(Request $request)
+    {
+        $request->user()->sendEmailVerificationNotification();
+
+        return back()->with('message', 'Verification link sent!');
     }
 }

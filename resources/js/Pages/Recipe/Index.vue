@@ -13,7 +13,7 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <Search />
+            <!-- <Search /> -->
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                 <div v-if="!getRecipes.length">
                     <div class="p-5">
@@ -35,7 +35,7 @@
 import AppLayout from '@/Layouts/AppLayout'
 import DataTable from "@/Components/DataTable";
 import Pagination from "@/Components/Pagination";
-import Search from "@/Components/Search";
+// import Search from "@/Components/Search";
 import {
     Inertia
 } from '@inertiajs/inertia'
@@ -48,7 +48,6 @@ export default {
         AppLayout,
         DataTable,
         Pagination,
-        Search
     },
     props: {
         recipes: {

@@ -17,6 +17,7 @@ class CreateProceduresTable extends Migration
             $table->id();
             $table->string('title');
             $table->string('content');
+            $table->foreignId('recipe_id')->constrained('recipes');
             $table->timestamps();
         });
     }

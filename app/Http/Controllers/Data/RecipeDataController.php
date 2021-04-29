@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Data;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Redirect;
 
 class RecipeDataController extends Controller
 {
@@ -30,10 +31,20 @@ class RecipeDataController extends Controller
     {
         $input = $request->validate([
             'status' => ['required'],
+            'comment' => [],
             'recipeId' => ['required', 'numeric']
         ]);
 
         return $this->recipeRepository->update($input) ? back()->with('message', 'succesfully updated') : '';
+    }
+
+    public function show(Request $request )
+    {
+        $input = $request->validate([
+            'search' => ['required'],
+            'searchBy' => []
+        ]);
+        $this->recipeRepository->search($input);
     }
     /**
      * Create recipe
@@ -51,6 +62,12 @@ class RecipeDataController extends Controller
         ]);
 
         $response = $this->recipeRepository->create($request);
-        return back()->with('message', 'success');
+        // return Redirect::route('recipe.create')->with(['message' => 'Recipe added successfully!']);
+    }
+
+    public function destory($id)
+    {
+        $response = $this->recipeRepository->delete($id);
+        return Redirect::route('dashboard.index');
     }
 }

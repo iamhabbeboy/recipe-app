@@ -15,12 +15,14 @@ class CreateRecipesTable extends Migration
     {
         Schema::create('recipes', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
             $table->string('description');
             $table->string('photo')->nullable();
-            $table->bigInteger('cost')->nullable();
+            $table->string('cost')->nullable();
             $table->enum('meal_type', ['breakfast', 'lunch', 'dinner'])->nullable();
             $table->enum('status', ['approve', 'reject', 'pending'])->default('pending');
             $table->string('comment')->nullable();
+            $table->foreignId('user_id')->constrained('users');
             $table->timestamps();
         });
     }
