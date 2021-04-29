@@ -15,7 +15,7 @@
     </td>
     <td class="px-6 py-4 whitespace-nowrap">
         <div class="text-sm text-gray-500">
-            {{ description }}
+            {{ shortDescription }}
         </div>
     </td>
     <td class="px-6 py-4 whitespace-nowrap">
@@ -44,5 +44,10 @@ export default {
             type: Boolean
         }
     },
+    computed: {
+        shortDescription() {
+            return this.description ? this.description.substring(0, 50) + '...' : '';
+        }
+    }
 }
 </script>

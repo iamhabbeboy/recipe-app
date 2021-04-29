@@ -61,7 +61,7 @@ class RecipeDataController extends Controller
         ]);
 
         $response = $this->recipeRepository->create($request);
-        // return Redirect::route('recipe.create')->with(['message' => 'Recipe added successfully!']);
+        return Redirect::route('dashboard.index')->with(['message' => 'Recipe added successfully!']);
     }
 
     public function destory($id)

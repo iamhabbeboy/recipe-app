@@ -12,8 +12,6 @@
                 <form method="POST" enctype="multipart/form-data" @submit.prevent="submitForm">
                     <div class="w-1/2 mx-auto pt-10 pb-10">
                         <h3 class="font-semibold text-lg pb-5">Add Recipe</h3>
-                        <div class="bg-green-400 text-white p-5 rounded-md font-semibold">Recipe successfully Added </div>
-                        {{ message }}
                         <div class="mt-4">
                             <jet-label for="name" value="Name" />
                             <jet-input type="text" class="mt-1 block w-full" required v-model="form.name" />
@@ -151,13 +149,13 @@ export default {
     mounted() {
         this.form.name = this.name
         this.form.description = this.description
-        if(this.instruction.length) {
+        if(this.instruction && this.instruction.length) {
             this.form.instruction = this.instruction
         }
-        if(this.nutrition.length) {
+        if(this.nutrition && this.nutrition.length) {
             this.form.nutrition = this.nutrition
         }
-        if(this.ingredient.length) {
+        if(this.ingredient && this.ingredient.length) {
             this.form.ingredient = this.ingredient
         }
         this.form.cost = this.cost ? this.cost.substring(1) : 0
@@ -212,9 +210,7 @@ export default {
             formData.append('ingredient', JSON.stringify(this.form.ingredient));
             formData.append('nutrition', JSON.stringify(this.form.nutrition));
 
-            Inertia.post(route('recipe.create'), formData).then(() => {
-                // this.$alert
-            });
+            Inertia.post(route('recipe.create'), formData)
         },
     },
 }

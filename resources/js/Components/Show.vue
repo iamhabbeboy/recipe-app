@@ -84,7 +84,7 @@
                 Instructions
             </h3>
             <p v-for="(value, index) in instruction" :key="index">
-                {{ value.title }} &nbsp; {{ value.content }}
+                <b>{{ value.title }}</b> &nbsp; {{ value.content }}
             </p>
         </div>
         <div class="mt-8 ml-0 pl-0">
