@@ -190,7 +190,7 @@ class RecipeRepository
             default:
                 break;
         }
-       return $response->paginated();
+       return $response->whereStatus(config('recipe.status_approve'))->paginated();
     }
 
     private function getUploadPhotoPath($photo)
