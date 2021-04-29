@@ -14,6 +14,7 @@ class Nutrition extends Model
     protected $fillable = [
         'content',
         'value',
-        'percentage'
+        'percentage',
+        'recipe_id'
     ];
 }

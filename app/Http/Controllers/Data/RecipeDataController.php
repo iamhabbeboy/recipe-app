@@ -58,7 +58,6 @@ class RecipeDataController extends Controller
         $request->validate([
             'name' => ['required'],
             'description' => ['required'],
-            'photo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
 
         $response = $this->recipeRepository->create($request);

@@ -28,8 +28,8 @@ Route::middleware(['auth:sanctum', 'verified'])
 Route::get('/', [PageController::class, 'index'])->name('guest');
 Route::get('/{id}', [PageController::class, 'show'])->name('guest.show');
 
-Route::get('/email/verify', [PageController::class, 'verifyUser'])->middleware('auth')->name('verification.notice');
-
-Route::get('/email/verify/{id}/{hash}', [PageController::class, 'verifyEmail'])->middleware(['auth', 'signed'])->name('verification.verify');
-
-Route::post('/email/verification-notification', [PageController::class, 'verificationNotification'])->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+Route::middleware(['auth'])->group(function() {
+    Route::get('/email/verify/{id}/{hash}', [PageController::class, 'verifyEmail'])->middleware(['signed'])->name('verification.verify');
+    Route::post('/email/verification-notification', [PageController::class, 'verificationNotification'])->middleware(['throttle:6,1'])->name('verification.send');
+    Route::get('/email/verify', [PageController::class, 'verifyUser'])->name('verification.notice');
+});

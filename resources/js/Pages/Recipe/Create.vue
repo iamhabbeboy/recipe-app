@@ -151,13 +151,13 @@ export default {
     mounted() {
         this.form.name = this.name
         this.form.description = this.description
-        if(this.instruction) {
+        if(this.instruction.length) {
             this.form.instruction = this.instruction
         }
-        if(this.nutrition) {
+        if(this.nutrition.length) {
             this.form.nutrition = this.nutrition
         }
-        if(this.ingredient) {
+        if(this.ingredient.length) {
             this.form.ingredient = this.ingredient
         }
         this.form.cost = this.cost ? this.cost.substring(1) : 0
@@ -208,7 +208,7 @@ export default {
             formData.append('cost', this.form.cost);
             formData.append('description', this.form.description);
             formData.append('meal_type', this.form.meal_type);
-            formData.append('instruction', this.form.instruction);
+            formData.append('instruction', JSON.stringify(this.form.instruction));
             formData.append('ingredient', JSON.stringify(this.form.ingredient));
             formData.append('nutrition', JSON.stringify(this.form.nutrition));
 

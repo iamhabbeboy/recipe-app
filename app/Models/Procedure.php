@@ -11,6 +11,7 @@ class Procedure extends Model
 
     protected $fillable = [
         'title',
-        'content'
+        'content',
+        'recipe_id'
     ];
 }

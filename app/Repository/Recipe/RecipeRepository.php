@@ -34,7 +34,7 @@ class RecipeRepository
      */
     public function get($status = null)
     {
-        $userRole = auth()->check() && auth()->user()->is_admin ? true : false;
+        $userRole = (bool) auth()->check() && auth()->user()->is_admin;
         $userId = auth()->check() && !$userRole ? auth()->user()->id : null;
 
         $response = $this->recipe->getByUser($userId);
@@ -57,7 +57,7 @@ class RecipeRepository
             'search' => ['required'],
             'searchBy' => []
         ]);
-        $search = $input['search'];
+
         return $this->search($input);
     }
     /**
@@ -71,11 +71,6 @@ class RecipeRepository
     {
         $recipeId = $input['recipeId'];
         return $this->recipe->find($recipeId)->update($input);
-    }
-
-    public function getAll($id = null)
-    {
-        return $this->recipe->getByUser($id);
     }
 
     public function find($id)
@@ -92,10 +87,13 @@ class RecipeRepository
      */
     public function create($input)
     {
+
         $recipe = [];
         $recipe['name'] = $input->name;
         $recipe['description'] = $input->description;
-        $recipe['photo'] = $this->getUploadPhotoPath($input->photo);
+        if($input->photo !== "undefined") {
+            $recipe['photo'] = $this->getUploadPhotoPath($input->photo);
+        }
         $recipe['cost'] = $input->cost;
         $recipe['mealType'] = $input->meal_type;
         $recipe['userId'] = auth()->user()->id;
@@ -105,74 +103,66 @@ class RecipeRepository
             $recipeId = $this->setRecipe($recipe, $recipeId);
         }
 
-        $this->setIngredient($input->ingredient,  $recipeId);
-        // $this->setNutrition($input->nutrition, $recipe->id);
-        // $this->procedure($input->instruction, $recipe->id);
+        self::setIngredient($input->ingredient,  $recipeId);
+        self::setNutrition($input->nutrition, $recipeId);
+        self::setProcedure($input->instruction, $recipeId);
 
         return $recipe;
     }
 
     private function setRecipe($input, $id)
     {
-         $response = $this->recipe->updateOrCreate(['id' => $id, 'user_id' => $input['userId']], [
+        $data = [
             'name' => $input['name'],
             'description' => $input['description'],
-            'photo' => $input['photo'],
             'cost' => $input['cost'],
             'meal_type' => $input['mealType'],
             'user_id' => $input['userId']
-        ]);
+        ];
+        if($input['photo'] ?? null) {
+            $data['photo'] = $input['photo'];
+        }
+         $response = $this->recipe->updateOrCreate(['id' => $id, 'user_id' => $input['userId']], $data);
 
         return $response->id;
     }
 
-    private function procedure($instruction, $recipeId)
+    private static function setProcedure($procedure, $recipeId)
     {
-        $response = \App\Models\Procedure::create([
-            'title' => 'steps',
-            'content' => $instruction
-        ]);
+        $procedures = json_decode($procedure, true);
+        self::addRecipeRelationship(\App\Models\Procedure::class, $procedures, $recipeId);
     }
 
-    private function setNutrition($nutrition, $recipeId)
+    private static function setNutrition($nutrition, $recipeId)
     {
         $nutritions = json_decode($nutrition, true);
-        $model = new \App\Models\Nutrition();
+        self::addRecipeRelationship(\App\Models\Nutrition::class, $nutritions, $recipeId);
     }
 
-    private function setIngredient($ingredient, $recipeId)
+    private static function setIngredient($ingredient, $recipeId)
     {
         $ingredients = json_decode($ingredient, true);
-        dd($ingredients);
-        $this->addRecipeRelationship(\App\Models\Ingredient::class, $ingredients, $recipeId);
+        self::addRecipeRelationship(\App\Models\Ingredient::class, $ingredients, $recipeId);
     }
 
-    private function addRecipeRelationship($model, $data, $recipeId)
+    private static function addRecipeRelationship($model, $data, $recipeId)
     {
         $response = $model::whereRecipeId($recipeId);
-        if($response->count()) {
-            foreach($data as $key => $value) {
-                $value['recipe_id'] = $recipeId;
-                $a = $response->update($value);
+        $dataCopy = [];
+        foreach($data as $key => $value) {
+            $value['recipe_id'] = $recipeId;
+            $dataCopy[$key] = $value;
+            $dataCopy[$key]['recipe_id'] = $recipeId;
+            $dataCopy[$key]['created_at'] = Carbon::now();
+            $dataCopy[$key]['updated_at'] = Carbon::now();
+            if(!empty($value['id'])) {
+                $response->whereId($value['id']);
+                unset($value['id']);
+                $response->update($value);
+            } else {
+                $model::create($value);
             }
-            dd("oops");
-        } else {
-            dd("lksjdfdf");
         }
-        //  else {
-        //     $data = [];
-        //     foreach($data as $key => $value) {
-        //        $data[] = [
-        //             'content' => $value['content'],
-        //             'quantity' => $value['quantity'],
-        //             'category' => $value['category'],
-        //             'recipe_id' => $recipeId,
-        //             'created_at' => Carbon::now(),
-        //             'updated_at' => Carbon::now()
-        //         ];
-        //     }
-        //     $response = $model::insert($data);
-        // }
     }
 
     public function search($input)
