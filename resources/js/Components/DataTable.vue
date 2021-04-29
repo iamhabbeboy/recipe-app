@@ -24,8 +24,7 @@
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                        <!-- More people... -->
-                        <ListItem v-for="recipe in recipes" :key="recipe.id" :recipe="recipe" />
+                        <ListItem v-for="recipe in recipes" :key="recipe.id" :recipe="recipe" :hasLogin="isLoggedIn" />
                     </tbody>
                 </table>
             </div>
@@ -43,6 +42,9 @@ export default {
             type: Object,
             required: true,
         },
+        isLoggedIn: {
+            type: Boolean
+        }
     },
     components: {
         ListItem

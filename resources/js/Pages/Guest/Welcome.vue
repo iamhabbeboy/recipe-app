@@ -1,17 +1,21 @@
 <template>
-<app-layout>
-    <template #header>
-        <div class="flex justify-between">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Dashboard
-            </h2>
-            <inertia-link v-show="!isAdmin" :href="route('dashboard.create')" class=" bg-green-500 text-white text-sm font-semibold p-3 rounded-md">
-                Add Recipe
-            </inertia-link>
-        </div>
-    </template>
+<div class=" min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center sm:pt-0">
+    <div v-if="canLogin" class="hidden fixed top-0 right-0 px-6 py-4 sm:block">
+        <inertia-link v-if="$page.props.user" href="/dashboard" class="text-sm text-gray-700 underline">
+            Dashboard
+        </inertia-link>
 
-    <div class="py-12">
+        <template v-else>
+            <inertia-link :href="route('login')" class="text-sm text-gray-700 underline">
+                Log in
+            </inertia-link>
+
+            <inertia-link v-if="canRegister" :href="route('register')" class="ml-4 text-sm text-gray-700 underline">
+                Register
+            </inertia-link>
+        </template>
+    </div>
+    <div class="py-12 mt-20">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <Search />
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
@@ -24,50 +28,35 @@
                     <DataTable :recipes="getRecipes" :isLoggedIn="isLoggedIn" />
                 </div>
             </div>
-            <!-- {{ recipes }} -->
             <Pagination v-if="getRecipes.length" :links="getPaginationLinks" />
         </div>
     </div>
-</app-layout>
+</div>
 </template>
 
 <script>
-import AppLayout from '@/Layouts/AppLayout'
 import DataTable from "@/Components/DataTable";
 import Pagination from "@/Components/Pagination";
 import Search from "@/Components/Search";
-import {
-    Inertia
-} from '@inertiajs/inertia'
-import {
-    reactive
-} from "vue";
 
 export default {
+    props: {
+        canLogin: Boolean,
+        canRegister: Boolean,
+        recipes: Array,
+        isLoggedIn: Boolean
+    },
     components: {
-        AppLayout,
         DataTable,
         Pagination,
         Search
-    },
-    props: {
-        recipes: {
-            type: Object,
-            required: true
-        },
-        isLoggedIn: {
-            type: Boolean
-        },
-        isAdmin: {
-            type: Boolean
-        }
     },
     computed: {
         getRecipes() {
             return this.recipes.data || [];
         },
         getPaginationLinks() {
-            return this.recipes.meta || [];
+            return this.recipes.meta;
         }
     }
 }

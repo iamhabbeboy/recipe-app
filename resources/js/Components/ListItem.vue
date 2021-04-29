@@ -1,41 +1,35 @@
 <template>
-    <tr>
-        <td class="px-6 py-4 whitespace-nowrap">
-            <div class="flex items-center">
-                <div class="flex-shrink-0 h-10 w-10">
-                    <img
-                        class="h-10 w-10 rounded-full"
-                        src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60"
-                        alt=""
-                    />
-                </div>
-                <div class="ml-4">
-                    <div class="text-sm font-medium text-gray-900">
-                        {{ name }}
-                    </div>
-                    <div class="text-sm text-gray-500">{{ mealType }} </div>
-                </div>
+<tr>
+    <td class="px-6 py-4 whitespace-nowrap">
+        <div class="flex items-center">
+            <div class="flex-shrink-0 h-10 w-10">
+                <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60" alt="" />
             </div>
-        </td>
-        <td class="px-6 py-4 whitespace-nowrap">
-            <div class="text-sm text-gray-500">
-                {{ description }}
+            <div class="ml-4">
+                <div class="text-sm font-medium text-gray-900">
+                    {{ name }}
+                </div>
+                <div class="text-sm text-gray-500">{{ mealType }} </div>
             </div>
-        </td>
-        <td class="px-6 py-4 whitespace-nowrap">
-            <span
-                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-green-800"
-            >
-                {{ status }}
-            </span>
-        </td>
-        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ cost }}</td>
-        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-            <inertia-link :href="route('dashboard.show', { dashboard })" class="text-indigo-600 hover:text-indigo-900">
-                View
-            </inertia-link>
-        </td>
-    </tr>
+        </div>
+    </td>
+    <td class="px-6 py-4 whitespace-nowrap">
+        <div class="text-sm text-gray-500">
+            {{ description }}
+        </div>
+    </td>
+    <td class="px-6 py-4 whitespace-nowrap">
+        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-green-800">
+            {{ status }}
+        </span>
+    </td>
+    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ cost }}</td>
+    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+        <inertia-link :href="hasLogin ? route('dashboard.show', { dashboard }) : route('guest.show', { id: dashboard })" class="text-indigo-600 hover:text-indigo-900">
+            View
+        </inertia-link>
+    </td>
+</tr>
 </template>
 
 <script>
@@ -43,10 +37,10 @@ export default {
     props: {
         recipe: {
             type: Object,
+        },
+        hasLogin: {
+            type: Boolean
         }
-    },
-    mounted() {
-        console.log(this.recipe)
     },
     computed: {
         name() {
@@ -62,15 +56,18 @@ export default {
         },
         cost() {
             const cost = this.recipe.cost || 0;
-            return `$${cost}`;
+            return `${cost}`;
         },
         dashboard() {
             return this.recipe.id;
         },
         mealType() {
-             const capitalizeText = this.recipe.meal_type.substring(0, 1).toUpperCase();
+            const capitalizeText = this.recipe.meal_type.substring(0, 1).toUpperCase();
             return `${capitalizeText}${this.recipe.meal_type.substring(1)}`
         }
+    },
+    mounted() {
+        console.log(this.hasLogin);
     }
 }
 </script>

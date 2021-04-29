@@ -37,13 +37,13 @@ class RecipeController extends Controller
     public function index()
     {
         $response = new RecipeCollection($this->recipeRepository->get());
-        return Inertia::render('Recipe/Index', ['recipes' => $response]);
+        return Inertia::render('Recipe/Index', ['recipes' => $response, 'isLoggedIn' => auth()->check(), 'isAdmin' => auth()->user()->is_admin]);
     }
 
     public function show($id)
     {
         $response = new RecipeResource($this->recipeRepository->find($id));
-        return Inertia::render('Recipe/Single', ['recipe' => $response]);
+        return Inertia::render('Recipe/Single', ['recipe' => $response, 'isLoggedIn' => auth()->check(), 'isUser' => auth()->user()->is_admin]);
     }
 
     public function create()

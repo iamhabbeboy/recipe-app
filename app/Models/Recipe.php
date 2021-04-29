@@ -21,6 +21,7 @@ class Recipe extends Model
         'cost',
         'photo',
         'status',
+        'user_id',
         'meal_type',
         'description',
     ];
@@ -70,7 +71,7 @@ class Recipe extends Model
         if($id) {
             $query->whereUserId($id);
         }
-        return $query->with(['tags.ingredient']);
+        return $query;
     }
 
     public function scopeGetByUserId($query, $userId)
@@ -80,8 +81,12 @@ class Recipe extends Model
 
     public function scopeGetAttributes($query)
     {
-        return $query->with(['tags.ingredient', 'tags.procedure', 'tags.nutrition'])
-        ->paginate(config('recipe.max_per_page'));
+        return $query->with(['tags.ingredient', 'tags.procedure', 'tags.nutrition']);
+    }
+
+    public function scopePaginated($query)
+    {
+        return $query->paginate(config('recipe.max_per_page'));
     }
 
     public function tags()

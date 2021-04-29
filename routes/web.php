@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Guest\PageController;
-use Inertia\Inertia;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
 /*
@@ -15,13 +15,17 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('/', PageController::class);
-
-Route::post('/search', function (Request $request) {
-    $search = $request->search;
-
+Route::prefix('recipe')->group(function () {
+    Route::post('status', [App\Http\Controllers\Data\RecipeDataController::class, 'status'])->name('recipe.status');
+    Route::post('create', [App\Http\Controllers\Data\RecipeDataController::class, 'create'])->name('recipe.create');
 });
 
 Route::middleware(['auth:sanctum', 'verified'])
     ->resource('dashboard', App\Http\Controllers\Recipe\RecipeController::class);
 
+Route::get('/', [PageController::class, 'index'])->name('guest');
+Route::get('/{id}', [PageController::class, 'show'])->name('guest.show');
+
+Route::post('/search', function (Request $request) {
+    $search = $request->search;
+});
