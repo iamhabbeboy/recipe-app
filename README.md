@@ -10,3 +10,5 @@ Then run seeder by inserting dummy data for test using
 `php artisan db:seed --class=UserSeeder, IngredientSeeder, NutritionSeeder, & ProcedureSeeder
 
 ## Test Users
+> Admin: email: abiodun@gmail.com, password: 123123
+> User: email: john@gmail.com, password: 123123
